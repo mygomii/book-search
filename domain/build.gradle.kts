@@ -1,15 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
-kotlin {
-    jvmToolchain(17)
+    id("com.mygomii.kotlin.library")
 }
 
 dependencies {

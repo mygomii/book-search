@@ -1,9 +1,7 @@
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+    id("com.mygomii.android.application")
 }
 
 android {
@@ -12,8 +10,6 @@ android {
 
     defaultConfig {
         applicationId = "com.mygomii.book_search"
-        minSdk = 24
-        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -29,20 +25,9 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
+    buildFeatures { buildConfig = true }
 }
 
-// Inject Kakao API key from local.properties into BuildConfig
 val kakaoKey: String = run {
     val props = Properties()
     val f = rootProject.file("local.properties")
@@ -60,10 +45,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":presentation"))
 
-    // Needed for ServiceLocator (Room databaseBuilder)
     implementation(libs.androidx.room.runtime)
-    // Ktor types are exposed by :data via api, but adding is harmless if needed
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
