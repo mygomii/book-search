@@ -17,5 +17,6 @@ local.properties
 data/build
 domain/build
 presentation/build
-
+build-logic/build
+.kotlin
 .idea
