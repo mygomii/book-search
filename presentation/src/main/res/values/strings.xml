@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_title">검색</string>
+    <string name="favorites_title">즐겨찾기</string>
+    <string name="search_hint">제목 또는 저자 검색</string>
+    <string name="sort_accuracy">정확도순</string>
+    <string name="sort_recency">발간일</string>
+    <string name="load_more">더 보기</string>
+
+    <string name="favorites_search_hint">즐겨찾기 검색(제목/저자)</string>
+    <string name="sort_today_added">오늘추가</string>
+    <string name="sort_title">제목</string>
+
+    <string name="label_author">저자: %1$s</string>
+    <string name="label_publisher">출판사: %1$s</string>
+    <string name="label_publish_date">출간일: %1$s</string>
+    <string name="label_isbn">ISBN: %1$s</string>
+    <string name="label_normal_price">정상가: %1$s</string>
+    <string name="label_sale_price">할인가: %1$s</string>
+    <string name="book_intro">책 소개</string>
+    <string name="detail_not_found">도서 정보를 찾을 수 없습니다.</string>
+    <string name="default_query_example">미움받을 용기</string>
+</resources>

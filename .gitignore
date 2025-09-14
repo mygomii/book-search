@@ -18,5 +18,6 @@ data/build
 domain/build
 presentation/build
 build-logic/build
+designsystem/build
 .kotlin
 .idea

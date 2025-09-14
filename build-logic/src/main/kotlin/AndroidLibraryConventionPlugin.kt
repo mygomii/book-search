@@ -10,25 +10,26 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             pluginManager.apply("com.android.library")
             pluginManager.apply("org.jetbrains.kotlin.android")
 
-        extensions.configure<LibraryExtension> {
-            compileSdk = 36
+            extensions.configure<LibraryExtension> {
+                compileSdk = 36
 
-            defaultConfig {
-                minSdk = 24
+                defaultConfig {
+                    minSdk = 24
+                }
+
+                compileOptions {
+                    sourceCompatibility = JavaVersion.VERSION_17
+                    targetCompatibility = JavaVersion.VERSION_17
+                }
             }
 
-            compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_17
-                targetCompatibility = JavaVersion.VERSION_17
+            project.extensions.findByName("kotlin")?.let {
+                try {
+                    val kts = it as org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
+                    kts.jvmToolchain(17)
+                } catch (_: Throwable) {
+                }
             }
-        }
-
-        project.extensions.findByName("kotlin")?.let {
-            try {
-                val kts = it as org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
-                kts.jvmToolchain(17)
-            } catch (_: Throwable) {}
-        }
         }
     }
 }

@@ -11,31 +11,32 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             pluginManager.apply("org.jetbrains.kotlin.android")
             pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
 
-        extensions.configure<ApplicationExtension> {
-            compileSdk = 36
+            extensions.configure<ApplicationExtension> {
+                compileSdk = 36
 
-            defaultConfig {
-                minSdk = 24
-                targetSdk = 36
+                defaultConfig {
+                    minSdk = 24
+                    targetSdk = 36
+                }
+
+                buildFeatures {
+                    compose = true
+                    buildConfig = true
+                }
+
+                compileOptions {
+                    sourceCompatibility = JavaVersion.VERSION_17
+                    targetCompatibility = JavaVersion.VERSION_17
+                }
             }
 
-            buildFeatures {
-                compose = true
-                buildConfig = true
+            project.extensions.findByName("kotlin")?.let {
+                try {
+                    val kts = it as org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
+                    kts.jvmToolchain(17)
+                } catch (_: Throwable) {
+                }
             }
-
-            compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_17
-                targetCompatibility = JavaVersion.VERSION_17
-            }
-        }
-
-        project.extensions.findByName("kotlin")?.let {
-            try {
-                val kts = it as org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
-                kts.jvmToolchain(17)
-            } catch (_: Throwable) {}
-        }
         }
     }
 }

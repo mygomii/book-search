@@ -24,6 +24,6 @@ include(":app")
 include(":domain")
 include(":data")
 include(":presentation")
+include(":designsystem")
 
-// Include build-logic (convention plugins)
 includeBuild("build-logic")

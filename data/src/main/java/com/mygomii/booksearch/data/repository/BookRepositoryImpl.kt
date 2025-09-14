@@ -52,7 +52,7 @@ class BookRepositoryImpl(
     )
 
     private fun Book.toEntity(): FavoriteBookEntity = FavoriteBookEntity(
-        isbn = isbn ?: title, // fallback though isbn should exist
+        isbn = isbn ?: title,
         title = title,
         authors = authors.joinToString(", "),
         publisher = publisher,

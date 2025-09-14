@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ds_min_price">최소가격</string>
+    <string name="ds_max_price">최대가격</string>
+    <string name="ds_publisher">출판사</string>
+</resources>
+
