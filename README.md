@@ -1,192 +1,119 @@
-# 📚 Book Search
+# Book Search
 
-안드로이드 책 검색 앱으로, 카카오 책 검색 API를 활용하여 도서를 검색하고 즐겨찾기 기능을 제공합니다.
+## 주요 기능
 
-## 🚀 주요 기능
+- 도서 검색: 제목/저자 키워드 검색, 페이지네이션
+- 정렬: 정확도순/발간일순 전환
+- 필터: 최소/최대 가격, 출판사
+- 즐겨찾기: 추가/삭제 및 정렬(추가일/제목)
+- 상세보기: 서지정보/가격/소개 확인
 
-- **도서 검색**: 제목, 저자명으로 도서 검색
-- **정렬 기능**: 정확도순, 발간일순 정렬
-- **필터링**: 가격대, 출판사별 필터링
-- **즐겨찾기**: 관심 있는 도서를 즐겨찾기에 추가/제거
-- **상세 정보**: 도서의 상세 정보 확인
-- **무한 스크롤**: 검색 결과 페이지네이션
+## 사용 프레임워크/라이브러리
 
-## 🛠 기술 스택
+- Kotlin, Kotlin Coroutines/Flow
+- Jetpack Compose, Material3, Navigation Compose
+- Coil (이미지 로딩)
+- Ktor Client (REST API)
+- Room (로컬 저장소)
+- Gradle Kotlin DSL, Version Catalog, Convention Plugins(build-logic)
 
-### 프레임워크 & 라이브러리
-- **언어**: Kotlin
-- **UI**: Jetpack Compose
-- **아키텍처**: Clean Architecture (MVVM)
-- **의존성 주입**: Service Locator 패턴
-- **네트워킹**: Ktor Client
-- **로컬 데이터베이스**: Room
-- **이미지 로딩**: Coil
-- **네비게이션**: Navigation Compose
-- **비동기 처리**: Kotlin Coroutines + Flow
-
-### 개발 도구
-- **빌드 도구**: Gradle (Kotlin DSL)
-- **버전 관리**: Version Catalog
-- **코드 생성**: KSP (Kotlin Symbol Processing)
-
-## 📁 프로젝트 구조
+## 모듈 구조
 
 ```
 book-search/
-├── app/                    # 애플리케이션 모듈
-│   ├── src/main/java/
-│   │   ├── MainActivity.kt
-│   │   ├── ServiceLocator.kt
-│   │   └── ui/theme/       # 테마 관련 파일들
-│   └── build.gradle.kts
-├── domain/                 # 도메인 모듈 (비즈니스 로직)
-│   └── src/main/kotlin/
-│       └── com/mygomii/booksearch/domain/
-│           ├── model/      # 도메인 모델
-│           ├── repository/ # 리포지토리 인터페이스
-│           └── usecase/    # 유스케이스
-├── data/                   # 데이터 모듈 (데이터 소스)
-│   └── src/main/java/
-│       └── com/mygomii/booksearch/data/
-│           ├── local/      # Room 데이터베이스
-│           ├── remote/     # API 클라이언트
-│           ├── mapper/     # DTO ↔ Domain 변환
-│           └── repository/ # 리포지토리 구현체
-├── presentation/           # 프레젠테이션 모듈 (UI)
-│   └── src/main/java/
-│       └── com/mygomii/booksearch/presentation/
-│           ├── search/     # 검색 화면
-│           ├── favorites/  # 즐겨찾기 화면
-│           ├── detail/     # 상세 화면
-│           ├── navigation/ # 네비게이션
-│           └── util/       # 유틸리티
-└── gradle/
-    └── libs.versions.toml  # 의존성 버전 관리
+├── app/                # 앱 엔트리, BuildConfig(API 키)
+├── domain/             # 순수 비즈니스 로직(모델/UseCase/Repo 인터페이스)
+├── data/               # 원격(Ktor)/로컬(Room) + Repository 구현
+├── presentation/       # 화면, ViewModel, 네비게이션
+├── designsystem/       # 재사용 가능한 Compose 컴포넌트/리소스
+├── build-logic/        # 컨벤션 플러그인(의존성/Android 설정)
+└── gradle/libs.versions.toml
 ```
 
-## 🏗 아키텍처
+의존성 방향
+- app → presentation → domain
+- data → domain
+- designsystem은 presentation에서 사용
 
-### Clean Architecture 적용
-```
-┌─────────────────┐
-│   Presentation  │ ← UI Layer (Compose + ViewModel)
-├─────────────────┤
-│     Domain      │ ← Business Logic Layer
-├─────────────────┤
-│      Data       │ ← Data Layer (Repository + DataSource)
-└─────────────────┘
-```
+## 디자인 시스템(Design System)
 
-### 모듈 의존성
-- `app` → `presentation` → `domain` ← `data`
-- 각 모듈은 단방향 의존성을 유지
-- 도메인 모듈은 외부 의존성 없음
+재사용 가능한 Compose 컴포넌트를 별도 모듈로 분리했습니다.
 
-## 🔧 빌드 방법
+- 기본 컴포넌트: `DsText`, `DsOutlinedTextField`, `DsAsyncImage`, `DsIconButton`, `DsButton`, `DsTopAppBar`
+- 복합 컴포넌트: `BookListItem`(썸네일/제목/저자/가격/즐겨찾기 토글), `FilterPanel`(가격/출판사 필터)
+- 문자열 리소스: 하드코딩 문자열 제거 및 `strings.xml`로 관리
 
-### 사전 요구사항
-- Android Studio Hedgehog (2023.1.1) 이상
-- JDK 17 이상
-- Android SDK API 24 이상
+## build-logic(컨벤션 플러그인)으로 의존성 중앙 관리
 
-### 1. 저장소 클론
-```bash
-git clone https://github.com/your-username/book-search.git
-cd book-search
-```
+각 모듈은 외부 라이브러리 의존성을 개별 `build.gradle.kts`에 직접 선언하지 않고, `build-logic`의 플러그인으로 주입합니다.
 
-### 2. API 키 설정
-`local.properties` 파일을 생성하고 카카오 API 키를 추가합니다:
+- com.mygomii.app.deps: 앱 공통(Compose, 테스트, 툴링 등)
+- com.mygomii.presentation.deps: 프리젠테이션 UI 의존성(Compose, Navigation, Coil 등)
+- com.mygomii.designsystem.deps: 디자인시스템 의존성(Compose, Coil)
+- com.mygomii.data.deps: Ktor/Room/KSP
+- com.mygomii.domain.deps: 코루틴
 
+장점
+- 버전/의존성 정의의 단일화 및 일관성 유지
+- 모듈 빌드 스크립트 단순화(프로젝트 의존만 기술)
+
+## 빌드/실행 방법
+
+사전 요구사항
+- Android Studio Koala 이상, JDK 17, Android SDK 24+
+
+API 키 설정
+- `local.properties`에 `KAKAO_API_KEY` 추가 (또는 환경변수로 설정)
 ```properties
-KAKAO_API_KEY=your_kakao_api_key_here
+KAKAO_API_KEY=your_kakao_api_key
 ```
+앱 모듈은 `BuildConfig.KAKAO_API_KEY`로 주입된 값을 사용합니다.
 
-카카오 API 키 발급 방법:
-1. [카카오 개발자 콘솔](https://developers.kakao.com/) 접속
-2. 애플리케이션 등록
-3. REST API 키 복사
-
-### 3. 프로젝트 빌드
+빌드
 ```bash
-# Debug 빌드
+# 전체 디버그 빌드
 ./gradlew assembleDebug
 
-# Release 빌드
-./gradlew assembleRelease
+# 모듈별 빌드 예시
+./gradlew :presentation:assembleDebug :data:assembleDebug :designsystem:assembleDebug
 ```
 
-### 4. 앱 실행
+실행
 ```bash
-# 디바이스에 설치 및 실행
 ./gradlew installDebug
 ```
 
-## 📱 주요 구현 포인트
+## 아키텍처/구현 포인트
 
-### 1. Clean Architecture
-- **Domain Layer**: 비즈니스 로직과 엔티티 정의
-- **Data Layer**: Repository 패턴으로 데이터 소스 추상화
-- **Presentation Layer**: Compose + ViewModel로 UI 상태 관리
+- Clean Architecture 스타일의 모듈 분리(단방향 의존성)
+- ViewModel + State(Flow)로 Compose 상태 관리 및 상태호이스팅
+- 네트워킹: Ktor + kotlinx.serialization + ContentNegotiation
+- 영속화: Room(Entity/Dao) + Flow로 즐겨찾기 관찰
+- 이미지: Coil의 AsyncImage를 DS 래퍼(`DsAsyncImage`)로 캡슐화
+- 내비게이션: Navigation Compose, 단순 라우트 문자열로 화면 전환
+- 국제화: 모든 사용자 노출 문자열은 `strings.xml`로 관리
+- 디자인시스템 래퍼로 UI 일관성 확보(Text, OutlinedTextField, IconButton, Button, TopAppBar 등)
 
-### 2. 상태 관리
-```kotlin
-data class SearchUiState(
-    val query: String = "",
-    val sort: SortType = SortType.ACCURACY,
-    val items: List<Book> = emptyList(),
-    val isLoading: Boolean = false,
-    val error: String? = null,
-    val favoriteIsbns: Set<String> = emptySet()
-)
-```
+## 주요 코드 위치
 
-### 3. 네트워킹
-- **Ktor Client**: HTTP 클라이언트
-- **Kotlinx Serialization**: JSON 직렬화/역직렬화
-- **에러 핸들링**: `runCatching`으로 안전한 네트워크 호출
+- Präsentation
+  - `presentation/.../search/SearchScreen.kt`: 검색 화면
+  - `presentation/.../favorites/FavoritesScreen.kt`: 즐겨찾기 화면
+  - `presentation/.../detail/DetailScreen.kt`: 상세 화면
+  - `presentation/.../AppRoot.kt`: AppBar/BottomBar, NavHost
+- Design System
+  - `designsystem/.../BookListItem.kt`, `FilterPanel.kt`
+  - `designsystem/.../Ds*.kt`: 공통 컴포넌트 래퍼
+- Data
+  - `data/.../remote`: Ktor API 클라이언트
+  - `data/.../local`: Room DB/DAO
+  - `data/.../repository`: Repository 구현
+- Domain
+  - `domain/.../model`, `usecase`, `repository`
 
-### 4. 로컬 데이터베이스
-- **Room**: SQLite 추상화
-- **Flow**: 실시간 데이터 관찰
-- **마이그레이션**: 스키마 변경 대응
+## 카카오 API 키
 
-### 5. UI/UX
-- **Material 3**: 최신 디자인 시스템
-- **반응형 UI**: 다양한 화면 크기 대응
-- **로딩 상태**: 사용자 경험 개선
+키 발급은 [카카오 개발자 콘솔](https://developers.kakao.com/)에서 애플리케이션 생성 후 REST API 키를 발급받아 `local.properties` 또는 환경변수로 설정하세요.
 
-## 🔄 데이터 흐름
+---
 
-1. **검색 요청**: 사용자가 검색어 입력
-2. **ViewModel**: UI 상태 업데이트 및 UseCase 호출
-3. **UseCase**: 비즈니스 로직 처리
-4. **Repository**: 데이터 소스 선택 (API 또는 로컬 DB)
-5. **API 호출**: 카카오 책 검색 API 요청
-6. **데이터 변환**: DTO → Domain 모델 변환
-7. **UI 업데이트**: Compose 리컴포지션
-
-## 🧪 테스트
-
-```bash
-# Unit 테스트 실행
-./gradlew test
-
-# Instrumented 테스트 실행
-./gradlew connectedAndroidTest
-```
-
-## 📦 의존성 관리
-
-Version Catalog를 사용하여 의존성을 중앙 집중식으로 관리:
-
-```toml
-[versions]
-kotlin = "2.0.21"
-composeBom = "2024.09.00"
-ktor = "2.3.12"
-room = "2.6.1"
-
-[libraries]
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-```
